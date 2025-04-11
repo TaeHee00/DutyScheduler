@@ -99,9 +99,6 @@ const dayCellGen = (lastDay: number, firstDay: number) => {
   for (let day = 1; day <= lastDay; day++) {
     currentWeek.push(<DayCell key={day}>
       {day}
-      <ScheduleBlock>A | 노무현</ScheduleBlock>
-      <ScheduleBlock>B | 박무현</ScheduleBlock>
-      <ScheduleBlock>C | 논무현</ScheduleBlock>
     </DayCell>);
 
     // 7일마다 새로운 주 생성
