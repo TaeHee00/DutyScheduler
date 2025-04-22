@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import searchIcon from "../../assets/images/search.png";
+import searchIcon from "../../../assets/images/search.png";
 
 const MainContainer = styled.div`
     display: flex;
@@ -9,19 +9,20 @@ const MainContainer = styled.div`
     height: 100%;
     border: 1px solid #ccc;
     border-radius: 5px;
-    width: 500px;
+    width: 300px;
     height: 35px;
     padding: 0 10px;
     background-color: #ffffff;
+    margin-right: 10px;
 `;
 
 const InputBox = styled.input`
     //border: 1px solid #ccc;
     //border-radius: 5px;
     border: none;
-    width: 500px;
-    height: 30px;
-    font-size: 18px;
+    width: 300px;
+    height: 25px;
+    font-size: 14px;
     font-family: "GmarketSans";
     
     &:focus {
@@ -41,11 +42,11 @@ const SearchIcon = styled.img`
     }
 `;
 
-const SearchBar = () => {
+const UtilSearchBar = () => {
   return (<MainContainer>
     <InputBox />
     <SearchIcon src={searchIcon}/>
   </MainContainer>);
 };
 
-export default SearchBar;
+export default UtilSearchBar;
