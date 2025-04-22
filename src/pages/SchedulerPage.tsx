@@ -2,6 +2,7 @@ import {JSX} from "react";
 import styled from "styled-components";
 import {DutyGroupProps} from "../components/sidebar/SidebarProps.ts";
 import Sidebar from "../components/sidebar/Sidebar.tsx";
+import Header from "../components/header/Header.tsx";
 
 
 const weeks = ["월", "화", "수", "목", "금", "토", "일"];
@@ -18,8 +19,8 @@ const MainContainer = styled.div`
 `;
 
 const SchedulerContainer = styled.div`
-    margin: 20px 30px;
-    width: 100%;
+    margin: 0 20px;
+    width: 96%;
     flex: 1;
 `;
 
@@ -126,6 +127,14 @@ const CurrentDate = styled.h2`
     font-family: NEXONFootballGothic;
     font-weight: 700;
 `;
+
+const MainContentContainer = styled.div`
+  display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+`;
+
 const SchedulerPage = () => {
   const today = new Date();
   const month = today.getMonth() + 1;
@@ -137,15 +146,18 @@ const SchedulerPage = () => {
 
   return (<MainContainer>
     <Sidebar />
-    <SchedulerContainer>
-      <CurrentDate>{today.getFullYear()}년 {month}월</CurrentDate>
-      <WeekGroup>
-        {weekCellGen()}
-      </WeekGroup>
-      <WeekDayGroup>
-        {dayCellGen(lastMonthDay, firstDay)}
-      </WeekDayGroup>
-    </SchedulerContainer>
+    <MainContentContainer>
+      <Header />
+      <SchedulerContainer>
+        <CurrentDate>{today.getFullYear()}년 {month}월</CurrentDate>
+        <WeekGroup>
+          {weekCellGen()}
+        </WeekGroup>
+        <WeekDayGroup>
+          {dayCellGen(lastMonthDay, firstDay)}
+        </WeekDayGroup>
+      </SchedulerContainer>
+    </MainContentContainer>
   </MainContainer>);
 };
 
