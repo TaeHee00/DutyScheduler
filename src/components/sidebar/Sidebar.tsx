@@ -13,7 +13,7 @@ const MainContainer = styled.div`
 `;
 
 const Title = styled.span`
-  font-family: "GmarketSans";
+    font-family: "GmarketSans";
     font-weight: 700;
     font-size: 20px;
 `;
@@ -42,28 +42,41 @@ const MenuButton = styled.button`
     width: 120px;
     height: 40px;
     border-radius: 5px;
-    
+
     &:hover {
         background-color: #cacaca;
     }
+
+    &.active {
+        background-color: #eed6ff;
+    }
 `;
+
+const checkPathame = (currentPathname: string, pathname: string) => {
+  return currentPathname == pathname;
+}
+
+const Tabs = [
+  {path: "/schedule", label: "당직표"},
+  {path: "/statistics", label: "당직 현황"},
+  {path: "/members", label: "인원 관리"},
+  {path: "/changes", label: "당직 변경"},
+];
 
 const Sidebar = () => {
   return (<MainContainer>
     <Title>당직표</Title>
-    <HorizontalRule />
-    <Link to={"/schedule"}>
-      <MenuButton>당직표</MenuButton>
-    </Link>
-    <Link to={"/statistics"}>
-      <MenuButton>당직 현황</MenuButton>
-    </Link>
-    <Link to={"/members"}>
-      <MenuButton>인원 관리</MenuButton>
-    </Link>
-    <Link to={"/changes"}>
-      <MenuButton>당직 변경</MenuButton>
-    </Link>
+    <HorizontalRule/>
+    {
+      Tabs.map((item) => (
+        <Link to={item.path}>
+          <MenuButton className={
+            checkPathame(window.location.pathname, item.path) ?
+              "active" : undefined
+          }>{item.label}</MenuButton>
+        </Link>
+      ))
+    }
   </MainContainer>);
 };
 
