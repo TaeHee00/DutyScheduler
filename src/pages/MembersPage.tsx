@@ -126,6 +126,7 @@ const ActionButton = styled.button`
         background-color: #ccc;
         border: 1px solid #ccc;
     }
+    white-space: nowrap;
 `;
 
 const ActionButtonGroup = styled.div`

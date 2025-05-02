@@ -1,4 +1,4 @@
-import { createRoot } from 'react-dom/client'
+import {createRoot} from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
 import {BrowserRouter, Routes, Route} from "react-router";
@@ -8,19 +8,53 @@ import GlobalStyle from "./styles/global.ts";
 import StatisticsPage from "./pages/StatisticsPage.tsx";
 import MembersPage from "./pages/MembersPage.tsx";
 import ChangePage from "./pages/ChangePage.tsx";
+import {ProtectedRoute} from "./components/ProtectedRoute.tsx";
+import {QueryClientProvider, QueryClient} from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <>
-    <GlobalStyle />
-    <BrowserRouter>
-      <Routes>
-        <Route path={"/"} element={<App />} />
-        <Route path={"/login"} element={<LoginPage />} />
-        <Route path={"/schedule"} element={<SchedulerPage />} />
-        <Route path={"/statistics"} element={<StatisticsPage />} />
-        <Route path={"/members"} element={<MembersPage />} />
-        <Route path={"/changes"} element={<ChangePage />} />
-      </Routes>
-    </BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <GlobalStyle/>
+      <BrowserRouter>
+        <Routes>
+          <Route path={"/"} element={<App/>}/>
+          <Route path={"/login"} element={<LoginPage/>}/>
+          <Route
+            path={"/schedule"}
+            element={
+              <ProtectedRoute>
+                <SchedulerPage/>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={"/statistics"}
+            element={
+              <ProtectedRoute>
+                <StatisticsPage/>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={"/members"}
+            element={
+              <ProtectedRoute>
+                <MembersPage/>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={"/changes"}
+            element={
+              <ProtectedRoute>
+                <ChangePage/>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </BrowserRouter>
+    </QueryClientProvider>
   </>
 )

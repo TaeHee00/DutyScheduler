@@ -30,6 +30,7 @@ const WeekCell = styled.div`
     padding: 5px;
     height: 20px;
     width: 100%;
+    min-width: 81px;
     border-radius: 8px;
 
     font-family: GmarketSans;
@@ -55,6 +56,7 @@ const DayCell = styled.div`
     width: 100%;
     border-radius: 8px;
     gap: 2px;
+    min-width: 81px;
 `;
 const WeekGroup = styled.div`
     width: 100%;
