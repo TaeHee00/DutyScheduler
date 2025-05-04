@@ -28,8 +28,7 @@ const HorizontalRule = styled.hr`
             cornflowerblue,
             rgba(0, 0, 0, 0)
     );
-    margin: 0 70px;
-    margin-bottom: 10px;
+    margin: 0 70px 10px;
 `;
 
 const MenuButton = styled.button`
@@ -42,6 +41,7 @@ const MenuButton = styled.button`
     width: 120px;
     height: 40px;
     border-radius: 5px;
+    margin-bottom: 3px;
 
     &:hover {
         background-color: #cacaca;
@@ -59,6 +59,7 @@ const checkPathame = (currentPathname: string, pathname: string) => {
 const Tabs = [
   {path: "/schedule", label: "당직표"},
   {path: "/statistics", label: "당직 현황"},
+  {path: "/groups", label: "그룹 관리"},
   {path: "/members", label: "인원 관리"},
   {path: "/changes", label: "당직 변경"},
 ];

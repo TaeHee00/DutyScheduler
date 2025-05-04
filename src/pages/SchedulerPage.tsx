@@ -21,6 +21,7 @@ const MainContainer = styled.div`
 const SchedulerContainer = styled.div`
     margin: 0 20px;
     width: 96%;
+    max-width: 950px;
     flex: 1;
 `;
 
