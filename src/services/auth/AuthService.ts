@@ -1,5 +1,5 @@
 import {Server} from "../Server.ts";
-import {Response} from "./Response.tsx";
+import {Response} from "../Response.tsx";
 import {getCookie} from "../../utils/Cookie.ts";
 
 export const AuthService = () => {
@@ -25,7 +25,7 @@ export const AuthService = () => {
       credentials: "include",
     })
       .then((response) => response.json())
-      .then((response: Response) => {
+      .then((response: Response<object>) => {
         console.log(response.data);
         console.log(response.status);
         const token = getCookie("ACCESS_TOKEN");

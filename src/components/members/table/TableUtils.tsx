@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import UtilSearchBar from "./UtilSearchBar.tsx";
+import {useModal, ModalStyle} from "@lasbe/react-modal";
+import {CreateGroupModal} from "../../modal/CreateGroupModal.tsx";
 
 const MainContainer = styled.div`
     display: flex;
@@ -60,7 +62,9 @@ const ButtonGroupContainer = styled.div`
     gap: 10px;
 `;
 
-const TableUtils = () => {
+const TableUtils = ({ page }: { page: string }) => {
+  const { openModal, closeModal } = useModal();
+
   return (<MainContainer>
     <SearchContainer>
       <UtilSearchBar/>
@@ -69,7 +73,16 @@ const TableUtils = () => {
     </SearchContainer>
     <ButtonGroupContainer>
       <UtilButton>삭제</UtilButton>
-      <UtilButton highlight={true}>추가</UtilButton>
+      <UtilButton
+        highlight={true}
+        onClick={() =>
+          openModal({
+            content: <CreateGroupModal closeModal={closeModal} />,
+          })
+        }
+      >
+        추가
+      </UtilButton>
     </ButtonGroupContainer>
   </MainContainer>);
 };

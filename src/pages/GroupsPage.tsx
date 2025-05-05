@@ -2,6 +2,10 @@ import styled from "styled-components";
 import Sidebar from "../components/sidebar/Sidebar.tsx";
 import TableUtils from "../components/members/table/TableUtils.tsx";
 import Header from "../components/header/Header.tsx";
+import { useModal } from "@lasbe/react-modal";
+import {useState, useEffect} from "react";
+import {GroupService} from "../services/group/GroupService.ts";
+import {GroupResponse} from "../services/group/GroupResponse.tsx";
 
 const MainContainer = styled.div`
     display: flex;
@@ -74,7 +78,8 @@ const getRandomDate = (start: Date, end: Date): Date => {
   return new Date(startDate + Math.random() * (endDate - startDate));
 };
 
-const toDateFormatting = (date: Date): string => {
+const toDateFormatting = (strDate: string): string => {
+  const date = new Date(strDate);
   const year = date.getFullYear();
   const month = (date.getMonth() + 1).toString().padStart(2, "0");
   const day = date.getDate().toString().padStart(2, "0");
@@ -83,33 +88,6 @@ const toDateFormatting = (date: Date): string => {
 
   return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
-
-const Groups = [
-  {
-    "name": "A",
-    "count": Math.floor(Math.random() * 51),
-    "createdAt": getRandomDate(
-      new Date(2025, 1, 1),
-      new Date(),
-    ),
-  },
-  {
-    "name": "B",
-    "count": Math.floor(Math.random() * 51),
-    "createdAt": getRandomDate(
-      new Date(2025, 1, 1),
-      new Date(),
-    ),
-  },
-  {
-    "name": "C",
-    "count": Math.floor(Math.random() * 51),
-    "createdAt": getRandomDate(
-      new Date(2025, 1, 1),
-      new Date(),
-    ),
-  },
-];
 
 const ActionButton = styled.button`
   border: 1px solid #9F9F9F;
@@ -135,6 +113,22 @@ const ActionButtonGroup = styled.div`
 `;
 
 const GroupsPage = () => {
+  const [groups, setGroups] = useState<GroupResponse[]>([]);
+  const { getGroupList } = GroupService();
+
+  useEffect(() => {
+    const fetchGroups = async () => {
+      try {
+        const response = await getGroupList();
+        setGroups(response.data);
+      } catch (error) {
+        console.error("그룹 목록 불러오기 실패:", error);
+      }
+    };
+
+    fetchGroups();
+  }, []);
+
   return (<MainContainer>
     <Sidebar />
     <ManagementContainer>
@@ -142,10 +136,10 @@ const GroupsPage = () => {
       <TableUtils />
       <Table>
         <colgroup>
-          <col width="30%" />
+          <col width="25%" />
           <col width="10%" />
-          <col width="25%" />
-          <col width="25%" />
+          <col width="35%" />
+          <col width="20%" />
         </colgroup>
         <thead>
           <tr>
@@ -165,7 +159,7 @@ const GroupsPage = () => {
         </thead>
         <tbody>
           {
-            Groups.map(group =>
+            groups.map(group =>
               <tr>
                 <td>
                   <span>{group.name}</span>
@@ -175,6 +169,7 @@ const GroupsPage = () => {
                 </td>
                 <td>
                   <span>{toDateFormatting(group.createdAt)}</span>
+                  {/*<span>{group.createdAt}</span>*/}
                 </td>
                 <td>
                   <ActionButtonGroup>
