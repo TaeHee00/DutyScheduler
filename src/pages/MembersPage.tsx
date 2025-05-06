@@ -2,6 +2,9 @@ import styled from "styled-components";
 import Sidebar from "../components/sidebar/Sidebar.tsx";
 import TableUtils from "../components/members/table/TableUtils.tsx";
 import Header from "../components/header/Header.tsx";
+import {useModal} from "@lasbe/react-modal";
+import {JoinGroupModal} from "../components/modal/JoinGroupModal.tsx";
+import {MemberResponse} from "../services/member/MemberResponse.tsx";
 
 const MainContainer = styled.div`
     display: flex;
@@ -105,13 +108,13 @@ const StyledLabel = styled.label`
   }
 `;
 
-const Members = [
-  {"name": "김철수", "group": "A"},
-  {"name": "나현영", "group": "B"},
-  {"name": "이경하", "group": "A"},
-  {"name": "김수지", "group": "B"},
-  {"name": "남궁수", "group": "B"},
-  {"name": "남궁현정", "group": "C"}
+const Members: MemberResponse[] = [
+  {"id": "1", "name": "김철수", "group": [{"id": "1", "name": "A", "count": 0, "createdAt": "오늘"}]},
+  {"id": "2", "name": "나현영", "group": [{"id": "1", "name": "A", "count": 0, "createdAt": "오늘"}]},
+  {"id": "3", "name": "이경하", "group": [{"id": "1", "name": "A", "count": 0, "createdAt": "오늘"}]},
+  {"id": "4", "name": "김수지", "group": [{"id": "1", "name": "A", "count": 0, "createdAt": "오늘"}]},
+  {"id": "5", "name": "남궁수", "group": [{"id": "1", "name": "A", "count": 0, "createdAt": "오늘"}]},
+  {"id": "6", "name": "남궁현정", "group": [{"id": "1", "name": "A", "count": 0, "createdAt": "오늘"}]}
 ];
 
 const ActionButton = styled.button`
@@ -137,7 +140,30 @@ const ActionButtonGroup = styled.div`
     gap: 5px;
 `;
 
+const GroupTagBox = styled.div`
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  font-family: "GmarketSans";
+    font-weight: bold;
+    font-size: 13px;
+    gap: 5px;
+`;
+
+const GroupTag = styled.div`
+    border: 1px solid #ededed;
+    border-radius: 100px;
+    padding: 4px 15px;
+
+    color: #171717;
+    background-color: rgb(150, 255, 252);
+`;
+
 const MembersPage = () => {
+  const { openModal, closeModal } = useModal();
+
   return (<MainContainer>
     <Sidebar />
     <ManagementContainer>
@@ -179,12 +205,22 @@ const MembersPage = () => {
                   <span>{member.name}</span>
                 </td>
                 <td>
-                  <span>{member.group}그룹</span>
+                  <GroupTagBox>
+                    <GroupTag>{member.group[0].name}</GroupTag>
+                  </GroupTagBox>
                 </td>
                 <td>
                   <ActionButtonGroup>
-                    <ActionButton>정보</ActionButton>
-                    <ActionButton>수정</ActionButton>
+                    {/*<ActionButton>정보</ActionButton>*/}
+                    <ActionButton
+                        onClick={() => {
+                          openModal({
+                            content: <JoinGroupModal member={member} closeModal={closeModal}/>,
+                          })
+                        }}
+                    >
+                      수정
+                    </ActionButton>
                     <ActionButton>삭제</ActionButton>
                   </ActionButtonGroup>
                 </td>

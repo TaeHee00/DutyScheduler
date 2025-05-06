@@ -6,6 +6,7 @@ import { useModal } from "@lasbe/react-modal";
 import {useState, useEffect} from "react";
 import {GroupService} from "../services/group/GroupService.ts";
 import {GroupResponse} from "../services/group/GroupResponse.tsx";
+import {JoinGroupModal} from "../components/modal/JoinGroupModal.tsx";
 
 const MainContainer = styled.div`
     display: flex;
@@ -71,13 +72,6 @@ const StyledLabel = styled.label`
   }
 `;
 
-const getRandomDate = (start: Date, end: Date): Date => {
-  const startDate = start.getTime();
-  const endDate = end.getTime();
-
-  return new Date(startDate + Math.random() * (endDate - startDate));
-};
-
 const toDateFormatting = (strDate: string): string => {
   const date = new Date(strDate);
   const year = date.getFullYear();
@@ -137,9 +131,9 @@ const GroupsPage = () => {
       <Table>
         <colgroup>
           <col width="25%" />
-          <col width="10%" />
-          <col width="35%" />
-          <col width="20%" />
+          <col width="15%" />
+          <col width="25%" />
+          <col width="25%" />
         </colgroup>
         <thead>
           <tr>
@@ -173,6 +167,15 @@ const GroupsPage = () => {
                 </td>
                 <td>
                   <ActionButtonGroup>
+                    {/*<ActionButton*/}
+                    {/*  onClick={() => {*/}
+                    {/*    openModal({*/}
+                    {/*      content: <JoinGroupModal group closeModal={closeModal} />,*/}
+                    {/*    })*/}
+                    {/*  }}*/}
+                    {/*>*/}
+                    {/*  인원 추가*/}
+                    {/*</ActionButton>*/}
                     <ActionButton>수정</ActionButton>
                     <ActionButton>삭제</ActionButton>
                   </ActionButtonGroup>

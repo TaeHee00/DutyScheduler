@@ -49,5 +49,27 @@ export const GroupService = () => {
     }
   };
 
-  return { createGroup, getGroupList };
+  const joinGroup = (
+    memberId: string,
+    groupId: string,
+  ) => {
+    fetch(`${Server.url}:${Server.port}/api/${Server.version}/groups/join`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        memberId: memberId,
+        groupId: groupId,
+      }),
+      credentials: "include",
+    })
+      .then(response => response.json())
+      .then((response: Response<object>) => {
+        console.log(response);
+        alert(response);
+      })
+  }
+
+  return { createGroup, getGroupList, joinGroup };
 }

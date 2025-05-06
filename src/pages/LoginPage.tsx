@@ -28,9 +28,14 @@ const LoginPage = () => {
       name="password"
       value={loginData.password}
       onChange={onChangeLoginData}
+      onKeyDown={e => {
+        if (e.key === "Enter") {
+          login(loginData.id, loginData.password);
+        }
+      }}
     />
     <button onClick={() => {
-      login(loginData.id, loginData.password);
+      login(loginData.id, loginData.password)
     }}>로그인</button>
     <Link to={"/"}>메인 페이지</Link>
   </>);

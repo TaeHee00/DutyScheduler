@@ -34,6 +34,7 @@ export const AuthService = () => {
           return;
         }
         alert("Success");
+        window.location.pathname = "/schedule";
       })
       .catch((error) => {
         alert(error);
