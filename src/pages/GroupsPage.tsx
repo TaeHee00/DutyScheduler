@@ -2,11 +2,9 @@ import styled from "styled-components";
 import Sidebar from "../components/sidebar/Sidebar.tsx";
 import TableUtils from "../components/members/table/TableUtils.tsx";
 import Header from "../components/header/Header.tsx";
-import { useModal } from "@lasbe/react-modal";
 import {useState, useEffect} from "react";
 import {GroupService} from "../services/group/GroupService.ts";
 import {GroupResponse} from "../services/group/GroupResponse.tsx";
-import {JoinGroupModal} from "../components/modal/JoinGroupModal.tsx";
 
 const MainContainer = styled.div`
     display: flex;
@@ -116,7 +114,7 @@ const GroupsPage = () => {
         const response = await getGroupList();
         setGroups(response.data);
       } catch (error) {
-        console.error("그룹 목록 불러오기 실패:", error);
+        console.error("그룹 목록 불러오기 실패: ", error);
       }
     };
 

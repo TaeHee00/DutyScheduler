@@ -3,6 +3,8 @@ import {GroupService} from "../../services/group/GroupService.ts";
 import {useState, ChangeEvent, useEffect} from "react";
 import {GroupResponse} from "../../services/group/GroupResponse.tsx";
 import {MemberResponse} from "../../services/member/MemberResponse.tsx";
+import {EditGroup} from "../../services/group/EditGroup.ts";
+import {MemberService} from "../../services/member/MemberService.ts";
 
 const Header = styled.span`
   font-family: "GmarketSans";
@@ -101,20 +103,42 @@ const GroupBox = styled.div`
     gap: 10px;
 `;
 
-export const JoinGroupModal = ({ member, closeModal }: { member: MemberResponse, closeModal: () => void }) => {
+interface EditMemberModalProps {
+  member: MemberResponse;
+  closeModal: () => void;
+  closeRefetch: () => void;
+}
+
+export const EditMemberModal = ({ member, closeModal, closeRefetch }: EditMemberModalProps) => {
   const [memberData, setMemberData] = useState<MemberResponse>(member);
-  const [groups, setGroups] = useState<GroupResponse[]>([]);
+  const [groups, setGroups] = useState<EditGroup[]>([]);
   const { getGroupList } = GroupService();
+  const { editMember } = MemberService();
 
   const onChangeMemberData = (e: ChangeEvent<HTMLInputElement>) => {
     setMemberData((prev) => ({...prev, [e.target.name]: e.target.value}));
+  }
+
+  const handleCheck = (id: string) => {
+    setGroups((prevGroups) => {
+      return prevGroups.map((prevGroup) =>
+        prevGroup.id === id ? {...prevGroup, isChecked: !prevGroup.isChecked} : prevGroup
+      );
+    });
   }
 
   useEffect(() => {
     const fetchGroups = async () => {
       try {
         const response = await getGroupList();
-        setGroups(response.data);
+        response.data.map((item) => {
+          const matchedGroup = memberData.groups.find(group => group.id === item.id);
+          if (matchedGroup) {
+            setGroups((prev) => [...prev, {id: item.id, name: item.name, isChecked: true}])
+          } else {
+            setGroups((prev) => [...prev, {id: item.id, name: item.name, isChecked: false}])
+          }
+        });
       } catch (error) {
         console.error("그룹 목록 불러오기 실패:", error);
       }
@@ -136,7 +160,11 @@ export const JoinGroupModal = ({ member, closeModal }: { member: MemberResponse,
       그룹
       {groups.map((group) => {
         return <GroupBox>
-          <HiddenCheckbox id={group.id} checked />
+          <HiddenCheckbox
+            id={group.id}
+            checked={group.isChecked}
+            onChange={() => {handleCheck(group.id)}}
+          />
           <StyledLabel htmlFor={group.id} />
           {group.name}
         </GroupBox>
@@ -145,10 +173,19 @@ export const JoinGroupModal = ({ member, closeModal }: { member: MemberResponse,
         <Button
           highlight={true}
           onClick={() => {
-            // createGroup(groupName);
+            try {
+              editMember({
+                memberId: memberData.id,
+                memberName: memberData.name,
+                groups: groups,
+              });
+              closeRefetch();
+            } catch (error) {
+              alert(error);
+            }
           }}
         >
-          추가
+          수정
         </Button>
         <Button
           onClick={() => closeModal()}

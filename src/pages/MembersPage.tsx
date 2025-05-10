@@ -3,8 +3,10 @@ import Sidebar from "../components/sidebar/Sidebar.tsx";
 import TableUtils from "../components/members/table/TableUtils.tsx";
 import Header from "../components/header/Header.tsx";
 import {useModal} from "@lasbe/react-modal";
-import {JoinGroupModal} from "../components/modal/JoinGroupModal.tsx";
+import {EditMemberModal} from "../components/modal/EditMemberModal.tsx";
 import {MemberResponse} from "../services/member/MemberResponse.tsx";
+import {useEffect, useState} from "react";
+import {MemberService} from "../services/member/MemberService.ts";
 
 const MainContainer = styled.div`
     display: flex;
@@ -108,15 +110,6 @@ const StyledLabel = styled.label`
   }
 `;
 
-const Members: MemberResponse[] = [
-  {"id": "1", "name": "김철수", "group": [{"id": "1", "name": "A", "count": 0, "createdAt": "오늘"}]},
-  {"id": "2", "name": "나현영", "group": [{"id": "1", "name": "A", "count": 0, "createdAt": "오늘"}]},
-  {"id": "3", "name": "이경하", "group": [{"id": "1", "name": "A", "count": 0, "createdAt": "오늘"}]},
-  {"id": "4", "name": "김수지", "group": [{"id": "1", "name": "A", "count": 0, "createdAt": "오늘"}]},
-  {"id": "5", "name": "남궁수", "group": [{"id": "1", "name": "A", "count": 0, "createdAt": "오늘"}]},
-  {"id": "6", "name": "남궁현정", "group": [{"id": "1", "name": "A", "count": 0, "createdAt": "오늘"}]}
-];
-
 const ActionButton = styled.button`
   border: 1px solid #9F9F9F;
   background-color: transparent;
@@ -163,6 +156,29 @@ const GroupTag = styled.div`
 
 const MembersPage = () => {
   const { openModal, closeModal } = useModal();
+  const [members, setMembers] = useState<MemberResponse[]>([]);
+  const { getMemberList } = MemberService();
+
+  const fetchMembers = async () => {
+    try {
+      const response = await getMemberList();
+      setMembers(response.data);
+      console.log(response.data);
+    } catch (error) {
+      console.error("인원 목록 불러오기 실패: ", error);
+    }
+  };
+
+  const closeAndRefetchModal = () => {
+    closeModal();
+    setTimeout(() => {
+      fetchMembers();
+    }, 500);
+  };
+
+  useEffect(() => {
+    fetchMembers();
+  }, []);
 
   return (<MainContainer>
     <Sidebar />
@@ -195,7 +211,7 @@ const MembersPage = () => {
         </thead>
         <tbody>
           {
-            Members.map(member =>
+            members.map(member =>
               <tr>
                 <td>
                   <HiddenCheckbox id={member.name}/>
@@ -206,7 +222,9 @@ const MembersPage = () => {
                 </td>
                 <td>
                   <GroupTagBox>
-                    <GroupTag>{member.group[0].name}</GroupTag>
+                    {member.groups.map((group) =>
+                      <GroupTag>{group.name}</GroupTag>
+                    )}
                   </GroupTagBox>
                 </td>
                 <td>
@@ -215,7 +233,7 @@ const MembersPage = () => {
                     <ActionButton
                         onClick={() => {
                           openModal({
-                            content: <JoinGroupModal member={member} closeModal={closeModal}/>,
+                            content: <EditMemberModal member={member} closeModal={closeModal} closeRefetch={closeAndRefetchModal}/>,
                           })
                         }}
                     >

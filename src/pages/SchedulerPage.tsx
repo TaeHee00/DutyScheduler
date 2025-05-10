@@ -3,6 +3,7 @@ import styled from "styled-components";
 import {DutyGroupProps} from "../components/sidebar/SidebarProps.ts";
 import Sidebar from "../components/sidebar/Sidebar.tsx";
 import Header from "../components/header/Header.tsx";
+import {Schedules} from "../services/schedule/Schedules.ts";
 
 
 const weeks = ["월", "화", "수", "목", "금", "토", "일"];
@@ -138,6 +139,107 @@ const MainContentContainer = styled.div`
     height: 100%;
 `;
 
+const Schedules: Schedules = {
+  "2025": {
+    "05": {
+      "01": {
+        "A": {
+          "scheduleId": "a1160721-bb47-45b9-a08c-a1fdabc479c3",
+          "startTime": new Date(),
+          "endTime": new Date(),
+          "dutyMember": {
+            "id": "8e7c26ef-fb77-4360-9d36-404e39387d93",
+            "name": "남궁수",
+            "groups": [
+              {
+                "id": "c13414b4-3257-4802-b25d-cdba52d4d91e",
+                "name": "A",
+              }
+            ],
+          }
+        },
+        "B": {
+          "scheduleId": "58300a47-e2e5-4743-945c-c622adc056fa",
+          "startTime": new Date(),
+          "endTime": new Date(),
+          "dutyMember": {
+            "id": "b655bd28-74c0-41d5-80dd-73939b9d34d7",
+            "name": "남궁현정",
+            "groups": [
+              {
+                "id": "987773b5-443f-453e-8ead-b3ff727ff901",
+                "name": "A",
+              }
+            ],
+          }
+        },
+        "C": {
+          "scheduleId": "fd821b88-c547-4af0-ac03-471837767819",
+          "startTime": new Date(),
+          "endTime": new Date(),
+          "dutyMember": {
+            "id": "75a6e94e-ab10-400f-b011-3655b02cf081",
+            "name": "이경하",
+            "groups": [
+              {
+                "id": "05c39480-39a5-4e14-a2c2-3780e99b86aa",
+                "name": "A",
+              }
+            ],
+          }
+        },
+      },
+      "02": {
+        "A": {
+          "scheduleId": "5978be57-9215-4044-a686-fc7986aa95d5",
+          "startTime": new Date(),
+          "endTime": new Date(),
+          "dutyMember": {
+            "id": "d9c07537-bd39-445a-b386-2496360e13ec",
+            "name": "김철수",
+            "groups": [
+              {
+                "id": "718d59fa-7ce6-49dd-b5cd-86a47c247a36",
+                "name": "A",
+              }
+            ],
+          }
+        },
+        "B": {
+          "scheduleId": "df7cec7a-0bdb-4355-9e91-fada6535adac",
+          "startTime": new Date(),
+          "endTime": new Date(),
+          "dutyMember": {
+            "id": "80b01547-696d-4ece-9770-da54a2c8e072",
+            "name": "남궁수",
+            "groups": [
+              {
+                "id": "397338cf-d93a-4488-b713-d5ebb29155b5",
+                "name": "A",
+              }
+            ],
+          }
+        },
+        "C": {
+          "scheduleId": "0c738b4d-d211-4af0-becc-ec260289a5e1",
+          "startTime": new Date(),
+          "endTime": new Date(),
+          "dutyMember": {
+            "id": "94d1fdc1-e5c6-450a-a4e1-b0ca9a33067a",
+            "name": "남궁현정",
+            "groups": [
+              {
+                "id": "09d01297-3b48-43e2-9986-db4fe830b079",
+                "name": "A",
+              }
+            ],
+          }
+        },
+      },
+    }
+  }
+};
+
 const SchedulerPage = () => {
   const today = new Date();
   const month = today.getMonth() + 1;
@@ -157,7 +259,12 @@ const SchedulerPage = () => {
           {weekCellGen()}
         </WeekGroup>
         <WeekDayGroup>
-          {dayCellGen(lastMonthDay, firstDay)}
+          {dayCellGen(
+            lastMonthDay,
+            firstDay,
+            today.getFullYear().toString(),
+            month.toString().padStart(2, '0'),
+          )}
         </WeekDayGroup>
       </SchedulerContainer>
     </MainContentContainer>
@@ -171,36 +278,50 @@ const weekCellGen = (): JSX.Element[] => {
   }
   return result;
 }
-const dayCellGen = (lastDay: number, firstDay: number) => {
+const dayCellGen = (
+  lastDay: number,
+  firstDay: number,
+  year: string,
+  month: string,
+) => {
   const weeks: JSX.Element[] = [];
   let currentWeek: JSX.Element[] = [];
   const prevDay: number = firstDay - 1;
   for (let i = 1; i <= prevDay; i++) {
     currentWeek.push(<DayCell>&nbsp;</DayCell>)
   }
+
   // 1일부터 마지막 날짜까지 반복
   for (let day = 1; day <= lastDay; day++) {
-    currentWeek.push(<DayCell key={day}>
-      {day}
-      <ScheduleBlock>
-        <DutyGroup group={"A"}>
-          A
-        </DutyGroup>
-        김가영
-      </ScheduleBlock>
-      <ScheduleBlock>
-        <DutyGroup group={"B"}>
-          B
-        </DutyGroup>
-        김나영
-      </ScheduleBlock>
-      <ScheduleBlock>
-        <DutyGroup group={"C"}>
-          C
-        </DutyGroup>
-        김다영
-      </ScheduleBlock>
-    </DayCell>);
+    currentWeek.push(
+      <DayCell key={day}>
+        {day.toString()}
+        {
+          Schedules[year][month][day.toString().padStart(2, '0')] && (
+            <>
+              {Schedules[year][month][day.toString().padStart(2, '0')]["A"] && (
+                <ScheduleBlock>
+                  <DutyGroup group="A">A</DutyGroup>
+                  {Schedules[year][month][day.toString().padStart(2, '0')]["A"].dutyMember.name}
+                </ScheduleBlock>
+              )}
+              {Schedules[year][month][day.toString().padStart(2, '0')]["B"] && (
+                <ScheduleBlock>
+                  <DutyGroup group="B">B</DutyGroup>
+                  {Schedules[year][month][day.toString().padStart(2, '0')]["B"].dutyMember.name}
+                </ScheduleBlock>
+              )}
+              {Schedules[year][month][day.toString().padStart(2, '0')]["C"] && (
+                <ScheduleBlock>
+                  <DutyGroup group="C">C</DutyGroup>
+                  {Schedules[year][month][day.toString().padStart(2, '0')]["C"].dutyMember.name}
+                </ScheduleBlock>
+              )}
+            </>
+          )
+        }
+      </DayCell>
+    );
 
     // 7일마다 새로운 주 생성
     if (currentWeek.length === 7) {

@@ -41,8 +41,8 @@ export const GroupService = () => {
         },
         credentials: "include",
       });
-      const response_1 = await response.json();
-      return response_1;
+      const responseJson = await response.json();
+      return responseJson;
     } catch (error) {
       alert(error);
       throw error;
